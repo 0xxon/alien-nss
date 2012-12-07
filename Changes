@@ -1,0 +1,11 @@
+Changes:
+
+* 0.02
+- change make to gmake
+- force shell to bash
+- add tests
+- remove nspr package description file to not confuse alien
+- more small tweaks I forgot
+
+* 0.01
+- initial version

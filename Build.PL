@@ -2,6 +2,7 @@ use strict;
 use warnings;
 
 use Alien::Base::ModuleBuild;
+use Data::Dumper;
 
 my $builder = Alien::Base::ModuleBuild->new (
 	module_name => 'Alien::NSS',
@@ -14,8 +15,8 @@ my $builder = Alien::Base::ModuleBuild->new (
 		'perl' => '5.8.1',
 		'Alien::Base' => 0,
 	},
-	dist_author => 'Johanna Amann <johanna@icir.org',
-	alien_name => 'dontpanic',
+	dist_author => 'Johanna Amann <johanna@icir.org>',
+	alien_name => 'nss',
 	alien_repository => {
 		protocol => 'ftp',
 		host => 'ftp.mozilla.org',
@@ -26,15 +27,16 @@ my $builder = Alien::Base::ModuleBuild->new (
 	# who needs configure, etc.
 	alien_build_commands => [
 		'rm -r mozilla/security/nss/cmd/shlibsign/', # fix build for OSx
-		'make -C mozilla/security/nss nss_build_all BUILD_OPT=1 $([ $(uname -m) = x86_64 ] && echo USE_64=1)',
+		'bash -c \'gmake -C mozilla/security/nss nss_build_all BUILD_OPT=1 $([ $(uname -m) = x86_64 ] && echo USE_64=1)\'',
+		'rm -r mozilla/nsprpub/*.OBJ/config/nspr.pc' # and remove the nspr.pc to make alien happy
 	],
 	alien_install_commands => [
 		'if [ ! -e %s ] ; then mkdir %s; fi',
 		'if [ ! -e %s/include ] ; then mkdir %s/include; fi',
 		'if [ ! -e %s/lib ] ; then mkdir %s/lib; fi',
-		'cp -L mozilla/dist/public/nss/* %s/include',
-		'cp -L -R mozilla/dist/*.OBJ/include/* %s/include',
-		'cp -L -R mozilla/dist/*.OBJ/lib/* %s/lib',
+		'if [ -d mozilla ]; then cp -L mozilla/dist/public/nss/* %s/include; fi',
+		'if [ -d mozilla ]; then cp -L -R mozilla/dist/*.OBJ/include/* %s/include; fi',
+		'if [ -d mozilla ]; then cp -L -R mozilla/dist/*.OBJ/lib/* %s/lib; fi',
 	],
 
 
