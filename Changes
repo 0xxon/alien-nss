@@ -1,5 +1,9 @@
 Changes:
 
+* 0.03
+- try to determine if make is a gnu-make
+- find 64 bit for freebsd
+
 * 0.02
 - change make to gmake
 - force shell to bash

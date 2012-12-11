@@ -4,6 +4,29 @@ use warnings;
 use Alien::Base::ModuleBuild;
 use Data::Dumper;
 
+use 5.10.1;
+
+my $make;
+
+`gmake --version 2>&1`;
+if ( $? == 0 ) {
+	$make = 'gmake';
+} elsif ( `make --version 2>&1` =~ m#GNU# ) {
+	$make = 'make';
+} else {
+	print STDERR "No suitable make could be found\n";
+	my $makeversion = `make --version 2>&1`;
+	print STDERR "Result of trying make --version:\n$makeversion\n";
+	exit(0);
+}
+
+my $arch = `uname -m`;
+warn "\nArchitecture: $arch\n";
+my $add64 = "";
+if ( $arch =~ m#64# ) {
+	$add64 = "USE_64=1";
+}
+
 my $builder = Alien::Base::ModuleBuild->new (
 	module_name => 'Alien::NSS',
 	license => 'mozilla',
@@ -26,8 +49,12 @@ my $builder = Alien::Base::ModuleBuild->new (
 
 	# who needs configure, etc.
 	alien_build_commands => [
+		"echo 'Option add64: $add64'",
+		'uname',
+		'uname -m',
+		'uname -a',
 		'rm -r mozilla/security/nss/cmd/shlibsign/', # fix build for OSx
-		'bash -c \'gmake -C mozilla/security/nss nss_build_all BUILD_OPT=1 $([ $(uname -m) = x86_64 ] && echo USE_64=1)\'',
+		'bash -c \''.$make.' -C mozilla/security/nss nss_build_all BUILD_OPT=1 $add64\'',
 		'rm -r mozilla/nsprpub/*.OBJ/config/nspr.pc' # and remove the nspr.pc to make alien happy
 	],
 	alien_install_commands => [
