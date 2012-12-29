@@ -59,7 +59,7 @@ my $builder = Alien::Base::ModuleBuild->new (
 		'if [ ! -e %s ] ; then mkdir %s; fi',
 		'if [ ! -e %s/include ] ; then mkdir %s/include; fi',
 		'if [ ! -e %s/lib ] ; then mkdir %s/lib; fi',
-		'if [ -d mozilla ]; then cp -L mozilla/dist/public/nss/* %s/include; fi',
+		'cp -L mozilla/dist/public/nss/* %s/include',
 		'if [ -d mozilla ]; then cp -L -R mozilla/dist/*.OBJ/include/* %s/include; fi',
 		'if [ -d mozilla ]; then cp -L -R mozilla/dist/*.OBJ/lib/* %s/lib; fi',
 	],
