@@ -53,15 +53,20 @@ my $builder = Alien::Base::ModuleBuild->new (
 		'uname -a',
 		'rm -r mozilla/security/nss/cmd/shlibsign/', # fix build for OSx
 		'bash -c \''.$make.' -C mozilla/security/nss nss_build_all BUILD_OPT=1 '.$add64.'\'',
-		'rm -r mozilla/nsprpub/*.OBJ/config/nspr.pc' # and remove the nspr.pc to make alien happy
+		'mkdir stage',
+		'mkdir stage/include',
+		'mkdir stage/lib',
+		'cp -L mozilla/dist/public/nss/* stage/include',
+		'cp -L -R mozilla/dist/*.OBJ/include/* stage/include',
+		'cp -L -R mozilla/dist/*.OBJ/lib/* stage/lib',
+		'rm -r mozilla'
 	],
 	alien_install_commands => [
 		'if [ ! -e %s ] ; then mkdir %s; fi',
 		'if [ ! -e %s/include ] ; then mkdir %s/include; fi',
 		'if [ ! -e %s/lib ] ; then mkdir %s/lib; fi',
-		'cp -L mozilla/dist/public/nss/* %s/include',
-		'if [ -d mozilla ]; then cp -L -R mozilla/dist/*.OBJ/include/* %s/include; fi',
-		'if [ -d mozilla ]; then cp -L -R mozilla/dist/*.OBJ/lib/* %s/lib; fi',
+		'if [ -d stage ]; then cp -L -R stage/include/* %s/include; fi',
+		'if [ -d stage ]; then cp -L -R stage/lib/* %s/lib; fi',
 	],
 
 

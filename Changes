@@ -1,5 +1,13 @@
 Changes:
 
+* 0.05 
+- build fixes, state libraries to install into separate directory
+  after build. Makes tests pass if no old version of the library
+  was ever installed
+
+* 0.04
+- test fixes, make tests pass if system NSS is installed
+
 * 0.03
 - try to determine if make is a gnu-make
 - find 64 bit for freebsd
