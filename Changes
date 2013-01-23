@@ -1,5 +1,11 @@
 Changes:
 
+* 0.06
+- up to NSS version 3.14.1
+- add patch to not build shlibsign (os-x trouble)
+- add very crude optional patch to make nss work with a high
+  number of certificates. Enable by using Build.pl --patchnss
+
 * 0.05 
 - build fixes, state libraries to install into separate directory
   after build. Makes tests pass if no old version of the library

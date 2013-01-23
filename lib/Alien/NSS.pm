@@ -3,7 +3,7 @@ package Alien::NSS;
 use strict;
 use warnings;
 
-our $VERSION = '0.05';
+our $VERSION = '0.06';
 
 use parent 'Alien::Base';
 
@@ -14,6 +14,29 @@ __END__
 =head1 NAME
 
 Acme::NSS - Alien wrapper for NSS ( Network Security Services )
+
+=head1 SYNOPSIS
+
+  use strict;
+  use warnings;
+
+  use Module::Build;
+  use Alien::NSS;
+
+  my $cflags = Alien::NSS->cflags;
+  my $ldflags = Alien::NSS->libs;
+
+  my $builder = Module::Build->new(
+  	module_name => 'my_lib',
+	extra_compiler_flags => $cflags,
+	extra_linker_flags => $ldflags,
+	configure_requires => {
+		'Alien::OpenSSL => 0
+		},
+  );
+
+  $builder->create_build_script;
+
 
 =head1 ABSTRACT
 

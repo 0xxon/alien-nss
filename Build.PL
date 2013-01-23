@@ -2,7 +2,6 @@ use strict;
 use warnings;
 
 use Alien::Base::ModuleBuild;
-use Data::Dumper;
 
 my $make;
 
@@ -25,6 +24,23 @@ if ( $arch =~ m#64# ) {
 	$add64 = "USE_64=1";
 }
 
+my @build_commands = (
+	"patch -p1 < ../../patch/shlibsign.patch", 
+	"echo 'Option add64: $add64'",
+	'uname',
+	'uname -m',
+	'uname -a',
+	'rm -r mozilla/security/nss/cmd/shlibsign/', # fix build for OSx
+	'bash -c \''.$make.' -C mozilla/security/nss nss_build_all BUILD_OPT=1 '.$add64.'\'',
+	'mkdir stage',
+	'mkdir stage/include',
+	'mkdir stage/lib',
+	'cp -L mozilla/dist/public/nss/* stage/include',
+	'cp -L -R mozilla/dist/*.OBJ/include/* stage/include',
+	'cp -L -R mozilla/dist/*.OBJ/lib/* stage/lib',
+	'rm -r mozilla'
+);
+
 my $builder = Alien::Base::ModuleBuild->new (
 	module_name => 'Alien::NSS',
 	license => 'mozilla',
@@ -41,26 +57,11 @@ my $builder = Alien::Base::ModuleBuild->new (
 	alien_repository => {
 		protocol => 'ftp',
 		host => 'ftp.mozilla.org',
-		location => '/pub/mozilla.org/security/nss/releases/NSS_3_14_RTM/src/',
+		location => 'pub/mozilla.org/security/nss/releases/NSS_3_14_1_RTM/src/',
 		pattern  => qr/^nss-([\d\.]+)-with-nspr-.*\.tar\.gz$/,
 	},
 
 	# who needs configure, etc.
-	alien_build_commands => [
-		"echo 'Option add64: $add64'",
-		'uname',
-		'uname -m',
-		'uname -a',
-		'rm -r mozilla/security/nss/cmd/shlibsign/', # fix build for OSx
-		'bash -c \''.$make.' -C mozilla/security/nss nss_build_all BUILD_OPT=1 '.$add64.'\'',
-		'mkdir stage',
-		'mkdir stage/include',
-		'mkdir stage/lib',
-		'cp -L mozilla/dist/public/nss/* stage/include',
-		'cp -L -R mozilla/dist/*.OBJ/include/* stage/include',
-		'cp -L -R mozilla/dist/*.OBJ/lib/* stage/lib',
-		'rm -r mozilla'
-	],
 	alien_install_commands => [
 		'if [ ! -e %s ] ; then mkdir %s; fi',
 		'if [ ! -e %s/include ] ; then mkdir %s/include; fi',
@@ -68,9 +69,13 @@ my $builder = Alien::Base::ModuleBuild->new (
 		'if [ -d stage ]; then cp -L -R stage/include/* %s/include; fi',
 		'if [ -d stage ]; then cp -L -R stage/lib/* %s/lib; fi',
 	],
-
-
 );
 
+if ( defined($builder->args->{'patchnss'}) ) {
+	print "Adding command to patch NSS to Build\n";
+	unshift(@build_commands, "patch -p1 < ../../patch/nss.patch");
+}
+
+$builder->alien_build_commands(\@build_commands);
 
 $builder->create_build_script;
