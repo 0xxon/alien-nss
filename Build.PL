@@ -26,12 +26,17 @@ if ( $arch =~ m#64# ) {
 
 my @build_commands = (
 	"patch -p1 < ../../patch/shlibsign.patch", 
+	# patch out @execute_path...
+	'perl -pi -e \'s/\@executable_path/\$\(INSTALL_DIR\)/g\' mozilla/security/nss/lib/freebl/config.mk',
+	'perl -pi -e \'s/\@executable_path/\$\(INSTALL_DIR\)/g\' mozilla/security/coreconf/Darwin.mk',
+	'perl -pi -e \'s/\@executable_path/\$\(INSTALL_DIR\)/g\' mozilla/nsprpub/configure',
+	'perl -pi -e \'s/\@executable_path/\$\(INSTALL_DIR\)/g\' mozilla/nsprpub/configure.in',
 	"echo 'Option add64: $add64'",
 	'uname',
 	'uname -m',
 	'uname -a',
 	'rm -r mozilla/security/nss/cmd/shlibsign/', # fix build for OSx
-	'bash -c \''.$make.' -C mozilla/security/nss nss_build_all BUILD_OPT=1 '.$add64.'\'',
+	'bash -c \''.$make.' -C mozilla/security/nss nss_build_all INSTALL_DIR=%s/lib BUILD_OPT=1 '.$add64.'\'',
 	'mkdir stage',
 	'mkdir stage/include',
 	'mkdir stage/lib',
@@ -45,19 +50,19 @@ my $builder = Alien::Base::ModuleBuild->new (
 	module_name => 'Alien::NSS',
 	license => 'mozilla',
 	configure_requires => {
-		'Alien::Base' => '0.001',
+		'Alien::Base' => '0.003', # 0.002 has a breaking bug, 0.001 also works
 		'Module::Build' => '0.38',
 	},
 	requires => {
 		'perl' => '5.8.1',
-		'Alien::Base' => 0,
+		'Alien::Base' => '0.003',
 	},
 	dist_author => 'Johanna Amann <johanna@icir.org>',
 	alien_name => 'nss',
 	alien_repository => {
 		protocol => 'ftp',
 		host => 'ftp.mozilla.org',
-		location => 'pub/mozilla.org/security/nss/releases/NSS_3_14_1_RTM/src/',
+		location => 'pub/mozilla.org/security/nss/releases/NSS_3_14_2_RTM/src/',
 		pattern  => qr/^nss-([\d\.]+)-with-nspr-.*\.tar\.gz$/,
 	},
 
