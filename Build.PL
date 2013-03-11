@@ -62,7 +62,7 @@ my $builder = Alien::Base::ModuleBuild->new (
 	alien_repository => {
 		protocol => 'ftp',
 		host => 'ftp.mozilla.org',
-		location => 'pub/mozilla.org/security/nss/releases/NSS_3_14_2_RTM/src/',
+		location => 'pub/mozilla.org/security/nss/releases/NSS_3_14_3_RTM/src/',
 		pattern  => qr/^nss-([\d\.]+)-with-nspr-.*\.tar\.gz$/,
 	},
 
