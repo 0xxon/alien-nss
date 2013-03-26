@@ -13,7 +13,7 @@ __END__
 
 =head1 NAME
 
-Acme::NSS - Alien wrapper for NSS ( Network Security Services )
+Alien::NSS - Alien wrapper for NSS ( Network Security Services )
 
 =head1 SYNOPSIS
 
