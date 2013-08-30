@@ -1,6 +1,7 @@
---- nss-3.13.6/mozilla/security/nss/lib/certdb/crl.c    2011-07-24 06:48:10.000000000 -0700
-+++ our-nss/mozilla/security/nss/lib/certdb/crl.c       2012-10-29 16:42:54.272271060 -0700
-@@ -2643,7 +2643,7 @@
+diff -rupN nss-3.15.1/nss/lib/certdb/crl.c ournss/nss/lib/certdb/crl.c
+--- nss-3.15.1/nss/lib/certdb/crl.c	2013-06-27 10:58:08.000000000 -0700
++++ ournss/nss/lib/certdb/crl.c	2013-08-30 16:04:24.000000000 -0700
+@@ -2609,7 +2609,7 @@ cert_CheckCertRevocationStatus(CERTCerti
      PRBool lockedwrite = PR_FALSE;
      SECStatus rv = SECSuccess;
      CRLDPCache* dpcache = NULL;
@@ -9,23 +10,24 @@
      CERTCRLEntryReasonCode reason = crlEntryReasonUnspecified;
      CERTCrlEntry* entry = NULL;
      dpcacheStatus ds;
-@@ -2663,6 +2663,8 @@
+@@ -2629,6 +2629,8 @@ cert_CheckCertRevocationStatus(CERTCerti
          *revReason = reason;
      }
-
-+   return SECSuccess;
+ 
++    return SECSuccess;
 +
-     if (t && SECSuccess != CERT_CheckCertValidTimes(issuer, t, PR_FALSE))
+     if (t && secCertTimeValid != CERT_CheckCertValidTimes(issuer, t, PR_FALSE))
      {
          /* we won't be able to check the CRL's signature if the issuer cert
---- nss-3.13.6/mozilla/security/nss/lib/certhigh/certvfy.c      2012-04-23 17:33:27.000000000 -0700
-+++ our-nss/mozilla/security/nss/lib/certhigh/certvfy.c 2012-10-29 16:24:22.940336766 -0700
-@@ -154,7 +154,7 @@
+diff -rupN nss-3.15.1/nss/lib/certhigh/certvfy.c ournss/nss/lib/certhigh/certvfy.c
+--- nss-3.15.1/nss/lib/certhigh/certvfy.c	2013-06-27 10:58:08.000000000 -0700
++++ ournss/nss/lib/certhigh/certvfy.c	2013-08-30 16:04:44.000000000 -0700
+@@ -122,7 +122,7 @@ SECStatus
  SEC_CheckCRL(CERTCertDBHandle *handle,CERTCertificate *cert,
-             CERTCertificate *caCert, int64 t, void * wincx)
+ 	     CERTCertificate *caCert, PRTime t, void * wincx)
  {
 -    return CERT_CheckCRL(cert, caCert, NULL, t, wincx);
 +       return SECSuccess;
  }
-
+ 
  /*
