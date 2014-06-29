@@ -34,8 +34,7 @@ my @build_commands = (
 	'uname',
 	'uname -m',
 	'uname -a',
-	#'rm -r nss/cmd/shlibsign/', # fix build for OSx
-	'bash -c \''.$make.' -C nss nss_build_all INSTALL_DIR=%s/lib BUILD_OPT=1 '.$add64.'\'',
+	'bash -c \''.$make.' -C nss nss_build_all INSTALL_DIR=%s/lib BUILD_OPT=1 CC=cc '.$add64.'\'',
 	'mkdir stage',
 	'mkdir stage/include',
 	'mkdir stage/lib',
@@ -74,15 +73,12 @@ my $builder = Alien::Base::ModuleBuild->new (
 		'if [ -d stage ]; then cp -L -R stage/include/* %s/include; fi',
 		'if [ -d stage ]; then cp -L -R stage/lib/* %s/lib; fi',
 	],
-	resources => {
-		license => ['http://www.mozilla.org/MPL/2.0/'],
-		homepage => 'https://github.com/0xxon/alien-nss',
-		bugtracker  => {
-			web => 'https://github.com/0xxon/alien-nss/issues',
-		},
-		repository  => {
-			url => 'https://github.com/0xxon/alien-nss.git',
-			type => 'git',
+	license => 'Mozilla_2_0',
+	meta_merge => {
+		resources => {
+			homepage => 'https://github.com/0xxon/alien-nss',
+			bugtracker  => 'https://github.com/0xxon/alien-nss/issues',
+			repository  => 'https://github.com/0xxon/alien-nss.git',
 		},
 	},
 
