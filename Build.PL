@@ -46,11 +46,13 @@ my @build_commands = (
 );
 
 my $builder = Alien::Base::ModuleBuild->new (
+	(sign => 1),
 	module_name => 'Alien::NSS',
 	license => 'mozilla',
 	configure_requires => {
 		'Alien::Base' => '0.003', # 0.002 has a breaking bug, 0.001 also works
 		'Module::Build' => '0.38',
+		'Test::More' => 0,
 	},
 	requires => {
 		'perl' => '5.8.1',
@@ -61,7 +63,7 @@ my $builder = Alien::Base::ModuleBuild->new (
 	alien_repository => {
 		protocol => 'ftp',
 		host => 'ftp.mozilla.org',
-		location => 'pub/mozilla.org/security/nss/releases/NSS_3_16_1_RTM/src/',
+		location => 'pub/mozilla.org/security/nss/releases/NSS_3_16_2_RTM/src/',
 		pattern  => qr/^nss-([\d\.]+)-with-nspr-.*\.tar\.gz$/,
 	},
 	# who needs configure, etc.

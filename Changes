@@ -1,5 +1,9 @@
 Changes:
 
+* 0.16
+- bump NSS to 3.16.1
+- add signature
+
 * 0.15
 - bump NSS to 3.16.1
 
@@ -34,7 +38,7 @@ Changes:
 - add very crude optional patch to make nss work with a high
   number of certificates. Enable by using Build.pl --patchnss
 
-* 0.05 
+* 0.05
 - build fixes, state libraries to install into separate directory
   after build. Makes tests pass if no old version of the library
   was ever installed
