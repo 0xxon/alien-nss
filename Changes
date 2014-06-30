@@ -1,7 +1,10 @@
 Changes:
 
+* 0.17
+- Fix compiling on FreeBSD 10 (and other systems that only have clang and don't have gcc). Reported by Slaven Rezic.
+
 * 0.16
-- bump NSS to 3.16.1
+- bump NSS to 3.16.2
 - add signature
 
 * 0.15

@@ -1,6 +1,8 @@
 use strict;
 use warnings;
 
+use IPC::Cmd qw/can_run/;
+
 use Alien::Base::ModuleBuild;
 
 my $make;
@@ -24,6 +26,9 @@ if ( $arch =~ m#64# ) {
 	$add64 = "USE_64=1";
 }
 
+my $addcc = "";
+$addcc = "CC=cc" if ( (!can_run('gcc')) && can_run('cc') );
+
 my @build_commands = (
 	# patch out @execute_path...
 	'perl -pi -e \'s/\@executable_path/\$\(INSTALL_DIR\)/g\' nss/lib/freebl/config.mk',
@@ -34,7 +39,7 @@ my @build_commands = (
 	'uname',
 	'uname -m',
 	'uname -a',
-	'bash -c \''.$make.' -C nss nss_build_all INSTALL_DIR=%s/lib BUILD_OPT=1 CC=cc '.$add64.'\'',
+	'bash -c \''.$make." -C nss nss_build_all INSTALL_DIR=%s/lib BUILD_OPT=1 $addcc ".$add64.'\'',
 	'mkdir stage',
 	'mkdir stage/include',
 	'mkdir stage/lib',
@@ -73,7 +78,7 @@ my $builder = Alien::Base::ModuleBuild->new (
 		'if [ -d stage ]; then cp -L -R stage/include/* %s/include; fi',
 		'if [ -d stage ]; then cp -L -R stage/lib/* %s/lib; fi',
 	],
-	license => 'Mozilla_2_0',
+	license => 'mozilla',
 	meta_merge => {
 		resources => {
 			homepage => 'https://github.com/0xxon/alien-nss',

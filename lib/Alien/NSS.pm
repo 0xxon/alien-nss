@@ -3,7 +3,7 @@ package Alien::NSS;
 use strict;
 use warnings;
 
-our $VERSION = '0.17_01';
+our $VERSION = '0.17';
 
 use parent 'Alien::Base';
 
@@ -27,12 +27,12 @@ Alien::NSS - Alien wrapper for NSS ( Network Security Services )
   my $ldflags = Alien::NSS->libs;
 
   my $builder = Module::Build->new(
-  	module_name => 'my_lib',
-	extra_compiler_flags => $cflags,
-	extra_linker_flags => $ldflags,
-	configure_requires => {
-		'Alien::OpenSSL => 0
-		},
+    module_name => 'my_lib',
+    extra_compiler_flags => $cflags,
+    extra_linker_flags => $ldflags,
+    configure_requires => {
+      'Alien::OpenSSL => 0
+    },
   );
 
   $builder->create_build_script;
