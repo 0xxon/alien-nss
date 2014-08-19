@@ -1,5 +1,8 @@
 Changes:
 
+* 0.20
+- bump NSS to 3.17
+
 * 0.19
 - bump NSS to 3.16.3
 
