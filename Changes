@@ -1,5 +1,8 @@
 Changes:
 
+* 0.21
+- bump NSS to 3.17.1 (security update)
+
 * 0.20
 - bump NSS to 3.17
 
