@@ -59,6 +59,7 @@ my $builder = Alien::Base::ModuleBuild->new (
 	configure_requires => {
 		'Alien::Base' => '0.003', # 0.002 has a breaking bug, 0.001 also works
 		'Module::Build' => '0.38',
+		'Sort::Versions' => 0,
 		'Test::More' => 0,
 	},
 	requires => {
