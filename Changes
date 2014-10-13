@@ -1,5 +1,9 @@
 Changes:
 
+* 0.22
+- finally change Build.PL to dynamically determine current NSS version.
+- alternatively, wanted version can be specified via command line option --version
+
 * 0.21
 - bump NSS to 3.17.1 (security update)
 

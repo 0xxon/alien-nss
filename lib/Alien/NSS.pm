@@ -3,7 +3,7 @@ package Alien::NSS;
 use strict;
 use warnings;
 
-our $VERSION = '0.21';
+our $VERSION = '0.22';
 
 use parent 'Alien::Base';
 
@@ -14,6 +14,11 @@ __END__
 =head1 NAME
 
 Alien::NSS - Alien wrapper for NSS ( Network Security Services )
+
+=head1 DESCRIPTION
+
+This library provides an alien wrapper for NSS, the cryptographic
+library that is ( among others ) used in Mozilla Firefox and Google Chrome.
 
 =head1 SYNOPSIS
 
@@ -37,13 +42,44 @@ Alien::NSS - Alien wrapper for NSS ( Network Security Services )
 
   $builder->create_build_script;
 
+=head1 INSTALLATION
 
-=head1 ABSTRACT
+L<Alien::NSS> uses the L<Module::Build> system for installation. The usual build
+process is
 
-Alien wrapper for NSS ( Network Security Services )
+ perl Build.PL
+ ./Build
+ ./Build test
+ ./Build install
 
-=head1 DESCRIPTION
+=head2 Build Flags
 
-This library provides an alien wrapper for NSS, the cryptographic
-library that is ( among others ) used in Mozilla Firefox and Google Chrome.
+When running C<perl Build.PL>, certain command line flags may be passed:
 
+=over 4
+
+=item C<--help>
+
+Print all possible additional command line parameters for Building
+L<Alien::NSS>
+
+=item C<--version=3_17_2>
+
+Specify the NSS version that should be installed. In this example, 3.17.2.
+
+=item C<--patchnss>
+
+Apply a patch that deactivates CRL caching and checking during
+verification. This prevents certain problems when trying to load a high
+number of certificates into NSS. Apply only if you understand the
+consequences.
+
+=back
+
+=head1 SOURCE REPOSITORY
+
+L<https://github.com/0xxon/alien-nss>
+
+=head1 AUTHOR
+
+Johanna Amann, E<lt>johanna@cpan.org<gt>

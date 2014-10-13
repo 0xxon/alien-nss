@@ -2,6 +2,10 @@ use strict;
 use warnings;
 
 use IPC::Cmd qw/can_run/;
+use Net::FTP;
+use Carp;
+
+use Sort::Versions; # This is a requirement of Alien::Base, hence we can also use it
 
 use Alien::Base::ModuleBuild;
 
@@ -20,7 +24,6 @@ if ( $? == 0 ) {
 }
 
 my $arch = `uname -m`;
-warn "\nArchitecture: $arch\n";
 my $add64 = "";
 if ( $arch =~ m#64# ) {
 	$add64 = "USE_64=1";
@@ -89,10 +92,47 @@ my $builder = Alien::Base::ModuleBuild->new (
 
 );
 
-if ( defined($builder->args->{'patchnss'}) ) {
+
+my %args = $builder->args;
+
+if ( exists $args{help} ) {
+	print<<EOF;
+Command line options:
+
+--help: print this message
+--patchnss: add NSS patch for processing of many certificates
+--version: download specific NSS version (e.g. 3_17_1).
+EOF
+	exit 0;
+}
+
+warn "\nArchitecture: $arch\n";
+
+if ( exists $args{patchnss} ) {
 	print "Adding command to patch NSS to Build\n";
 	unshift(@build_commands, "patch -p1 < ../../patch/nss.patch");
 }
+
+my $version;
+$version = $args{version} if(exists $args{version});
+
+if ( !defined($version) ) {
+	# Not specified, so let's look it up for ourselves
+	warn "Searching current download directory on FTP server...\n";
+	my $ftp = Net::FTP->new($builder->alien_repository->{host}, Debug => 0) or
+		croak ("Cannot connect to repository host: $@");
+	$ftp->login("anonymous", '-anonymous@') or croak("Cannot login: ".$ftp->message);
+	$ftp->cwd("/pub/mozilla.org/security/nss/releases/") or croak("Base download directory not found");
+	my @list = $ftp->ls or croak("Could not list directory");
+	$ftp->quit;
+
+	my @versions = sort { versioncmp($a, $b) } grep(s#^NSS_(\d.*)_RTM#$1#, @list);
+	$version = pop @versions;
+}
+
+my $location = "pub/mozilla.org/security/nss/releases/NSS_".$version."_RTM/src/";
+$builder->alien_repository->{location} = $location;
+warn "wanted NSS path: $location\n";
 
 $builder->alien_build_commands(\@build_commands);
 
