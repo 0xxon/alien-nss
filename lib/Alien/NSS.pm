@@ -83,3 +83,7 @@ L<https://github.com/0xxon/alien-nss>
 =head1 AUTHOR
 
 Johanna Amann, E<lt>johanna@cpan.orgE<gt>
+
+=head1 LICENSE
+
+See the LICENSE file for license information.
