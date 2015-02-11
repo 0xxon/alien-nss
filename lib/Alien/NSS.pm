@@ -83,3 +83,10 @@ L<https://github.com/0xxon/alien-nss>
 =head1 AUTHOR
 
 Johanna Amann, E<lt>johanna@cpan.orgE<gt>
+
+=head1 LICENSE
+
+This Library is subject to the terms of the Mozilla
+Public License, v. 2.0. If a copy of the MPL was not
+distributed with this library, You can obtain one at
+http://mozilla.org/MPL/2.0/.
