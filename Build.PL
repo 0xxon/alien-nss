@@ -7,7 +7,8 @@ use Carp;
 
 use Sort::Versions; # This is a requirement of Alien::Base, hence we can also use it
 
-use Alien::Base::ModuleBuild;
+use lib 'inc';
+use Alien::NSS::ModuleBuild;
 
 my $make;
 
@@ -52,12 +53,12 @@ my @build_commands = (
 	'rm -r dist nss nspr'
 );
 
-my $builder = Alien::Base::ModuleBuild->new (
+my $builder = Alien::NSS::ModuleBuild->new (
 	(sign => 1),
 	module_name => 'Alien::NSS',
 	license => 'mozilla',
 	configure_requires => {
-		'Alien::Base' => '0.003', # 0.002 has a breaking bug, 0.001 also works
+		'Alien::Base' => '0.018', # staged installation to blib
 		'Module::Build' => '0.38',
 		'Sort::Versions' => 0,
 		'Test::More' => 0,
@@ -65,7 +66,7 @@ my $builder = Alien::Base::ModuleBuild->new (
 	},
 	requires => {
 		'perl' => '5.8.1',
-		'Alien::Base' => '0.003',
+		'Alien::Base' => '0.018',
 	},
 	dist_author => 'Johanna Amann <johanna@icir.org>',
 	alien_name => 'nss',
