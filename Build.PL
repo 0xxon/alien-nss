@@ -50,6 +50,7 @@ my @build_commands = (
 	'cp -L dist/public/nss/* stage/include',
 	'cp -L -R dist/*.OBJ/include/* stage/include',
 	'cp -L -R dist/*.OBJ/lib/* stage/lib',
+	'rm -f stage/lib/*.a',
 	'rm -r dist nss nspr'
 );
 
