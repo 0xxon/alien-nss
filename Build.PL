@@ -1,8 +1,8 @@
 use strict;
 use warnings;
 
+use HTTP::Tiny;
 use IPC::Cmd qw/can_run/;
-use Net::FTP;
 use Carp;
 
 use Sort::Versions; # This is a requirement of Alien::Base, hence we can also use it
@@ -61,6 +61,7 @@ my $builder = Alien::Base::ModuleBuild->new (
 		'Module::Build' => '0.38',
 		'Sort::Versions' => 0,
 		'Test::More' => 0,
+		'HTTP::Tiny' => 0,
 	},
 	requires => {
 		'perl' => '5.8.1',
@@ -69,9 +70,9 @@ my $builder = Alien::Base::ModuleBuild->new (
 	dist_author => 'Johanna Amann <johanna@icir.org>',
 	alien_name => 'nss',
 	alien_repository => {
-		protocol => 'ftp',
+		protocol => 'http',
 		host => 'ftp.mozilla.org',
-		location => 'pub/mozilla.org/security/nss/releases/NSS_3_17_1_RTM/src/',
+		location => 'pub/mozilla.org/security/nss/releases/NSS_3_20_RTM/src/',
 		pattern  => qr/^nss-([\d\.]+)-with-nspr-.*\.tar\.gz$/,
 	},
 	# who needs configure, etc.
@@ -119,15 +120,14 @@ $version = $args{version} if(exists $args{version});
 
 if ( !defined($version) ) {
 	# Not specified, so let's look it up for ourselves
-	warn "Searching current download directory on FTP server...\n";
-	my $ftp = Net::FTP->new($builder->alien_repository->{host}, Debug => 0) or
-		croak ("Cannot connect to repository host: $@");
-	$ftp->login("anonymous", '-anonymous@') or croak("Cannot login: ".$ftp->message);
-	$ftp->cwd("/pub/mozilla.org/security/nss/releases/") or croak("Base download directory not found");
-	my @list = $ftp->ls or croak("Could not list directory");
-	$ftp->quit;
+	warn "Searching current download directory on HTTP server...\n";
+	my $resp = HTTP::Tiny->new->get("http://".$builder->alien_repository->{host}.'/pub/mozilla.org/security/nss/releases/');
+	if ( ! $resp->{success} || ! length($resp->{content}) ) {
+		croak("Error accessing repository - ".$resp->{status}.": ".$resp->{reason});
+	}
 
-	my @versions = sort { versioncmp($a, $b) } grep(s#^NSS_(\d.*)_RTM#$1#, @list);
+	# This won't work anymore if the server ever changes how it returns stuff. *shrug*
+	my @versions = sort { versioncmp($a, $b) } grep(s#.*\[DIR\].*href="NSS_(\d.*)_RTM/".*#$1#, split(/\n/, $resp->{content}));
 	$version = pop @versions;
 }
 
