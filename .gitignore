@@ -1,0 +1,12 @@
+Build
+MANIFEST
+MYMETA.json
+MYMETA.yml
+META.json
+META.yml
+Alien-NSS-*.tar.gz
+Alien-NSS-*/
+_build/
+_share/
+_alien/
+blib/
