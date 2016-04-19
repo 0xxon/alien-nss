@@ -1,5 +1,9 @@
 Changes:
 
+* 0.23
+- search path updates
+- fixes for module build changes
+
 * 0.22
 - finally change Build.PL to dynamically determine current NSS version.
 - alternatively, wanted version can be specified via command line option --version

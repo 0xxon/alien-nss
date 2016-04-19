@@ -129,9 +129,11 @@ if ( !defined($version) ) {
 	}
 
 	# This won't work anymore if the server ever changes how it returns stuff. *shrug*
-	my @versions = sort { versioncmp($a, $b) } grep(s#.*\[DIR\].*href="NSS_(\d.*)_RTM/".*#$1#, split(/\n/, $resp->{content}));
+	my @versions = sort { versioncmp($a, $b) } grep(s#.*<a href="/pub/security/nss/releases/NSS_(\d.*)_RTM/">.*#$1#, split(/\n/, $resp->{content}));
 	$version = pop @versions;
 }
+
+die "Could not determine current automatically, please specify with --version" if (!defined($version));
 
 my $location = "pub/mozilla.org/security/nss/releases/NSS_".$version."_RTM/src/";
 $builder->alien_repository->{location} = $location;
