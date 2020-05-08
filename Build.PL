@@ -72,10 +72,10 @@ my $builder = Alien::NSS::ModuleBuild->new (
 	dist_author => 'Johanna Amann <johanna@icir.org>',
 	alien_name => 'nss',
 	alien_repository => {
-		protocol => 'http',
+		protocol => 'https',
 		host => 'ftp.mozilla.org',
-		location => 'pub/mozilla.org/security/nss/releases/NSS_3_20_RTM/src/',
-		pattern  => qr/^nss-([\d\.]+)-with-nspr-.*\.tar\.gz$/,
+		location => 'pub/security/nss/releases/NSS_3_52_RTM/src/',
+		pattern  => qr/^.*-with-nspr-.*\.tar\.gz$/,
 	},
 	# who needs configure, etc.
 	alien_install_commands => [
@@ -135,7 +135,7 @@ if ( !defined($version) ) {
 
 die "Could not determine current automatically, please specify with --version" if (!defined($version));
 
-my $location = "pub/mozilla.org/security/nss/releases/NSS_".$version."_RTM/src/";
+my $location = "pub/security/nss/releases/NSS_".$version."_RTM/src/";
 $builder->alien_repository->{location} = $location;
 warn "wanted NSS path: $location\n";
 
